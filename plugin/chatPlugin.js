@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 const { chatting } = require('../utils/ai');
 const { writeFile, readFile, addContentToFile } = require('../utils/file');
 
@@ -5,6 +7,11 @@ function chatPlugin({ id = null, markdown = false } = {}) {
   id = id || new Date().getTime();
 
   const dir = 'tmp/chats/chat_' + id + '/';
+
+  if (!fs.existsSync(dir) && id !== null) {
+    console.log('Error: Chat directory not found');
+    process.exit(1);
+  }
 
   const history = [];
   try {
@@ -37,7 +44,13 @@ function chatPlugin({ id = null, markdown = false } = {}) {
     return response;
   };
 
-  const addHistory = async (message, response) => {
+  const addHistory = async (
+    message,
+    response,
+    saveHistory = true,
+    saveMarkdown = false
+  ) => {
+    console.log('addHistory', message, response);
     history.push({
       role: 'user',
       parts: [
@@ -54,6 +67,13 @@ function chatPlugin({ id = null, markdown = false } = {}) {
         },
       ],
     });
+    if (saveHistory) {
+      await writeHistory();
+    }
+    if (saveMarkdown) {
+      await writeToMarkdown(response);
+    }
+    return;
   };
 
   return {
