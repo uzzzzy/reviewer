@@ -1,0 +1,37 @@
+# Ignore node_modules directory (where npm installs dependencies)
+node_modules/
+
+# Ignore build output (e.g., if you're using TypeScript or Babel)
+dist/
+build/
+out/
+public/build/
+
+# Ignore log files
+*.log
+logs/
+debug.log
+npm-debug.log*
+
+# Ignore temporary files
+tmp/
+temp/
+*.tmp
+*.swp
+*.swo
+.DS_Store # macOS
+Thumbs.db # Windows
+
+# Ignore environment files
+.env
+.env.*
+!.env.example  # But don't ignore this example file!
+
+# Ignore IDE / Editor files
+.idea/ # JetBrains (IntelliJ, WebStorm, etc.)
+.vscode/ # Visual Studio Code
+*.suo # Visual Studio
+*.ntvs* # Visual Studio
+*.njsproj # Visual Studio
+*.sln # Visual Studio
+*.swc # VS Code

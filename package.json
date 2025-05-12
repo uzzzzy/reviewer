@@ -1,0 +1,26 @@
+{
+  "name": "code-reviewer",
+  "version": "0.0.0-development",
+  "description": "Review project code",
+  "author": "uzzzzy <akhmadfauzy@gmail.com>",
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": {
+    "review": "node index.js"
+  },
+  "dependencies": {
+    "@google/genai": "^0.13.0",
+    "dotenv": "^16.5.0",
+    "esm": "^3.2.25"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "private": true,
+  "keywords": [
+    "code review",
+    "ai",
+    "javascript",
+    "node.js"
+  ]
+}

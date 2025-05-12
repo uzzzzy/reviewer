@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  review: #  Service to handle the review process
+    build:
+      context: .
+      dockerfile: DockerfileReview # Use a dedicated Dockerfile for the review
+    volumes:
+      - .:/app # Mount the project directory
+      - ./output:/app/output # Mount the output directory
+    command: npm run review # Run the review command
