@@ -26,7 +26,14 @@
  *
  * @type {Array<FileObject>}
  */
-const filePaths = [];
+const filePaths = [
+  {
+    name: 'testdebug.html',
+    message:
+      'ini adalah file html testdebug.html untuk diperbaiki dari soal nomor 8',
+    path: './tmp/testdebug.html',
+  },
+];
 
 /**
  * Module exports an array of file objects.

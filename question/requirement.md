@@ -14,8 +14,7 @@ Kamu adalah seorang code reviewer berpengalaman.
 
    - [ ] Validasi email:
      - Format valid (contoh: user@domain.com)
-     - Domain email benar (gmail.com, hotmail.com, dll)
-     - Tidak menerima domain dummy (contoh: @test.com)
+     - Domain email benar (gmail.com, hotmail.com, dll) domain only
    - [ ] Validasi password:
      - Minimal 8 karakter
      - Kombinasi alfanumerik (a-z, A-Z, 0-9)

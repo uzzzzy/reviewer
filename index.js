@@ -20,7 +20,7 @@ async function main() {
   await chat.addHistory(
     `
 ini adalah requirement dari project:
-${readFile('question/requirement.md')}
+${readFile('question/requirement/utama.md')}
 setelah ini aku akan memberikan data project untuk review
 '''
     `,
