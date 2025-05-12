@@ -4,14 +4,14 @@ const { chatting } = require('../utils/ai');
 const { writeFile, readFile, addContentToFile } = require('../utils/file');
 
 function chatPlugin({ id = null, markdown = false } = {}) {
-  id = id || new Date().getTime();
-
   const dir = 'tmp/chats/chat_' + id + '/';
 
   if (!fs.existsSync(dir) && id !== null) {
     console.log('Error: Chat directory not found');
     process.exit(1);
   }
+
+  id = id || new Date().getTime();
 
   const history = [];
   try {

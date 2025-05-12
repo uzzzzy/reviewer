@@ -1,0 +1,21 @@
+services:
+  code-reviewer:
+    container_name: code-reviewer
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=development
+      # Add other environment variables from your .env file here
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - ./build/tmp:/tmp
+    working_dir: /app
+    command: npm run review # Default command, can override with 'chat' when needed
+    networks:
+      - reviewer-network
+
+networks:
+  reviewer-network:
+    driver: bridge
