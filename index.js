@@ -1,4 +1,4 @@
-require('./config');
+const config = require('./config');
 
 const { glob } = require('glob');
 const readline = require('readline');
@@ -20,7 +20,7 @@ async function main() {
   await chat.addHistory(
     `
 ini adalah requirement dari project:
-${readFile('question/requirement/utama.md')}
+${readFile('requirements/main.md')}
 setelah ini aku akan memberikan data project untuk review
 '''
     `,
@@ -30,7 +30,8 @@ setelah ini aku akan memberikan data project untuk review
   );
 
   const tree = await require('tree-cli')({
-    base: './tmp/project', // or any path you want to inspect.
+    base: config.projectPath,
+    ignore: config.excludedPaths,
     l: 5,
   });
 
@@ -42,7 +43,7 @@ ${tree.report}
     'ya'
   );
 
-  const requirementFiles = require('./question/paths');
+  const requirementFiles = require('./requirements/paths');
 
   if (requirementFiles.length > 0) {
     for (const requirementFile of requirementFiles) {
@@ -58,7 +59,7 @@ ${fileContent}
     }
   }
 
-  let paths = await glob('./tmp/project/**/*.*');
+  let paths = await glob(config.projectPath + '/**/*.*');
 
   const imageExtensions = [
     '.png',
@@ -77,6 +78,16 @@ ${fileContent}
       !ignoredFiles.includes(path.split('/').pop())
   );
 
+  const excludedPaths = config.excludedPaths;
+  paths = paths.filter((path) => {
+    for (const excludedPath of excludedPaths) {
+      if (path.replaceAll('\\', '/').includes(excludedPath)) {
+        return false;
+      }
+    }
+    return true;
+  });
+
   for (const path of paths) {
     const content = readFile(path);
     await chat.addHistory(
@@ -90,11 +101,6 @@ ${content}
     );
   }
 
-  await chat.sendMessage(`
-Buatlah penilaian secara terperinci untuk setiap poin requirement yang diberikan,
-berdasarkan standar kemampuan programmer pada level Junior.
-dengan nilai range 1-100
-    `);
   rl.prompt();
 
   rl.on('line', async (line) => {

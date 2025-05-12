@@ -1,5 +1,6 @@
 // import { GoogleGenAI } from '@google/genai';
 const { GoogleGenAI } = require('@google/genai');
+const config = require('../config');
 
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
@@ -7,7 +8,7 @@ const ai = new GoogleGenAI({
 
 function createChat({ history }) {
   return ai.chats.create({
-    model: 'gemini-2.0-flash',
+    model: config.aiModel,
     history,
   });
 }
