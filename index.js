@@ -60,7 +60,15 @@ ${fileContent}
 
   let paths = await glob('./tmp/project/**/*.*');
 
-  const imageExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp'];
+  const imageExtensions = [
+    '.png',
+    '.jpg',
+    '.jpeg',
+    '.gif',
+    '.svg',
+    '.webp',
+    '.ico',
+  ];
   const ignoredFiles = ['yarn.lock', 'package-lock.json'];
 
   paths = paths.filter(
