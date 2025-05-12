@@ -1,96 +1,82 @@
 const fs = require('fs');
 const path = require('path');
-
 const { chatting } = require('../utils/ai');
 const { writeFile, readFile, addContentToFile } = require('../utils/file');
 
 function chatPlugin(options = {}) {
-  let { id = null, markdown = false } = options;
-  let dir;
+  let { id = Date.now(), markdown = false } = options;
+  const dir = path.join('tmp', 'chats', `chat_${id}`);
+  const historyFile = path.join(dir, 'history.json');
+  const markdownFile = path.join(dir, 'chats.md');
 
-  if (id !== null) {
-    dir = path.join('tmp', 'chats', `chat_${id}`);
-    if (!fs.existsSync(dir)) {
+  // Ensure chat directory exists
+  if (!fs.existsSync(dir)) {
+    if (options.id !== undefined) {
       throw new Error(`Chat directory not found: ${dir}`);
     }
-    dir += path.sep; // tambahkan trailing slash
-  } else {
-    id = Date.now();
-    dir = path.join('tmp', 'chats', `chat_${id}`, path.sep);
     fs.mkdirSync(dir, { recursive: true });
   }
 
-  id = id || new Date().getTime();
-
+  // Load history
   const history = [];
   try {
-    const retrievedHistory = readFile(dir + 'history.json', '[]');
-    history.push(...JSON.parse(retrievedHistory));
+    const rawHistory = readFile(historyFile, '[]');
+    history.push(...JSON.parse(rawHistory));
   } catch (error) {
-    console.log('error', error);
+    console.error('Failed to load history:', error);
   }
 
-  const writeToMarkdown = async (message) => {
-    console.log('writeToMarkdown', message);
-    return await addContentToFile(dir + 'chats.md', message);
+  const writeMarkdown = async (content) => {
+    if (!markdown) return;
+    try {
+      await addContentToFile(markdownFile, content);
+    } catch (err) {
+      console.error('Failed to write markdown:', err);
+    }
   };
 
   const writeHistory = async () => {
-    await writeFile(dir + 'history.json', JSON.stringify(history, null, 2));
+    try {
+      await writeFile(historyFile, JSON.stringify(history, null, 2));
+    } catch (err) {
+      console.error('Failed to write history:', err);
+    }
   };
 
   const sendMessage = async (message, saveToHistory = true) => {
-    if (markdown) {
-      await writeToMarkdown('# ' + message);
-    }
+    await writeMarkdown(`# ${message}`);
     const response = await chatting({ history, message });
-    if (saveToHistory) {
-      await writeHistory();
-    }
-    if (markdown) {
-      await writeToMarkdown(response.text);
-    }
+
+    history.push({ role: 'user', parts: [{ text: message }] });
+    history.push({ role: 'model', parts: [{ text: response.text }] });
+
+    if (saveToHistory) await writeHistory();
+    await writeMarkdown(response.text);
+
     return response;
   };
 
   const addHistory = async (
     message,
-    response,
+    responseText,
     saveHistory = true,
     saveMarkdown = false
   ) => {
-    console.log('addHistory', message, response);
-    history.push({
-      role: 'user',
-      parts: [
-        {
-          text: message,
-        },
-      ],
-    });
-    history.push({
-      role: 'model',
-      parts: [
-        {
-          text: response,
-        },
-      ],
-    });
-    if (saveHistory) {
-      await writeHistory();
-    }
+    history.push({ role: 'user', parts: [{ text: message }] });
+    history.push({ role: 'model', parts: [{ text: responseText }] });
+
+    if (saveHistory) await writeHistory();
     if (saveMarkdown) {
-      await writeToMarkdown('#' + message);
-      await writeToMarkdown(response);
+      await writeMarkdown(`# ${message}`);
+      await writeMarkdown(responseText);
     }
-    return;
   };
 
   return {
     id,
     sendMessage,
     addHistory,
-    writeToMarkdown,
+    writeMarkdown,
   };
 }
 
