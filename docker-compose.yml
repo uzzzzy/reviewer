@@ -10,7 +10,6 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
-      - ./build/tmp:/tmp
     working_dir: /app
     command: npm run review # Default command, can override with 'chat' when needed
     networks:

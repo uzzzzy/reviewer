@@ -40,12 +40,11 @@ function chat() {
     ${content}
     '''
             `,
-        'ya',
-        false
+        'ya'
       );
       rl.prompt();
     } else {
-      await chat.sendMessage(line, false);
+      await chat.sendMessage(line);
       rl.prompt();
     }
   }).on('close', () => {

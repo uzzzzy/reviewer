@@ -12,8 +12,14 @@ function writeFile(filePath, content) {
 }
 
 function addContentToFile(filePath, content) {
-  const fileContent = readFile(filePath);
-  writeFile(filePath, fileContent + '\n\n' + content);
+  let fileContent = readFile(filePath);
+
+  fileContent += '\n\n';
+  // separator with '===' to make it easier to find the end of the file
+  fileContent += '-'.repeat(80) + '\n\n';
+  fileContent += content;
+
+  writeFile(filePath, fileContent);
 }
 
 function readFile(filePath, fallbackContent = '') {

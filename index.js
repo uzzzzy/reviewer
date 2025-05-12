@@ -1,5 +1,6 @@
 require('./config');
 
+const { glob } = require('glob');
 const readline = require('readline');
 
 const rl = readline.createInterface({
@@ -16,7 +17,17 @@ const chat = chatPlugin({
 });
 
 async function main() {
-  await chat.sendMessage(readFile('question/task.md'));
+  await chat.addHistory(
+    `
+ini adalah requirement dari project:
+${readFile('question/requirement.md')}
+setelah ini aku akan memberikan data project untuk review
+'''
+    `,
+    'ya',
+    true,
+    true
+  );
 
   const tree = await require('tree-cli')({
     base: './tmp/project', // or any path you want to inspect.
@@ -31,21 +42,33 @@ ${tree.report}
     'ya'
   );
 
-  await chat.addHistory(
-    `
-ini adalah requirement dari project:
-${readFile('question/requirement.md')}
-dan ini adalah testdebug.html
-'''
-${readFile('question/testdebug.html')}
-'''
-    `,
-    'ya',
-    true,
-    true
+  const requirementFiles = require('./question/paths');
+
+  if (requirementFiles.length > 0) {
+    for (const requirementFile of requirementFiles) {
+      const fileContent = readFile(requirementFile.path);
+      await chat.addHistory(
+        `
+ini adalah file: ${requirementFile.path}
+${requirementFile?.message || ''}
+${fileContent}
+        `,
+        'ya'
+      );
+    }
+  }
+
+  let paths = await glob('./tmp/project/**/*.*');
+
+  const imageExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp'];
+  const ignoredFiles = ['yarn.lock', 'package-lock.json'];
+
+  paths = paths.filter(
+    (path) =>
+      !imageExtensions.includes(path.split('.').pop()) &&
+      !ignoredFiles.includes(path.split('/').pop())
   );
 
-  const paths = require('./question/paths');
   for (const path of paths) {
     const content = readFile(path);
     await chat.addHistory(
@@ -60,7 +83,9 @@ ${content}
   }
 
   await chat.sendMessage(`
-bagaimana menurutmu?
+Buatlah penilaian secara terperinci untuk setiap poin requirement yang diberikan,
+berdasarkan standar kemampuan programmer pada level Junior.
+dengan nilai range 1-100
     `);
   rl.prompt();
 

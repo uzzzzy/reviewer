@@ -1,92 +1,36 @@
-const filePaths = [
-  // Server Side (Gefami-Test)
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test/app.js',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test/config/config.json',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test/controllers/HistoryController.js',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test/controllers/JsondataController.js',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test/controllers/UsersController.js',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test/data/users.json',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test/helpers/crypto.js',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test/helpers/jsonwebtoken.js',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test/helpers/utils.js',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test/middlewares/authenticator.js',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test/middlewares/authorization.js',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test/middlewares/errorHandler.js',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test/migrations/20250506141017-create-user.js',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test/migrations/20250506142617-create-history.js',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test/migrations/20250506145055-create-jsondata.js',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test/models/history.js',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test/models/index.js',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test/models/jsondata.js',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test/models/users.js',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test/package-lock.json',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test/package.json',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test/README.md',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test/routers/historyRouter.js',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test/routers/index.js',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test/routers/jsondataRouter.js',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test/routers/usersRouter.js',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test/seeders/20250506151531-create-user-seed.js',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test/seeders/20250507081912-create-jsondata-seed.js',
+/**
+ * Array of file objects containing file information.
+ * @typedef {Object} FileObject
+ * @property {string} name - The name of the file (e.g., 'debug.html')
+ * @property {string} path - The relative or absolute path to the file (e.g., './tmp/requirements/debug.html')
+ */
 
-  // Client Side (Gefami-Test-Client)
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/eslint.config.js',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/index.html',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/package-lock.json',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/package.json',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/public/vite.svg',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/README.md',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/api/baseUrl.ts',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/api/generalResponse.ts',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/api/historyService/index.ts',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/api/historyService/responseModel.ts',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/api/interceptor.ts',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/api/listJsonService/index.ts',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/api/listJsonService/requestModel.ts',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/api/listJsonService/responseModel.ts',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/api/loginService/index.ts',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/api/loginService/requestModel.ts',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/api/loginService/responseModel.ts',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/api/profileService/index.ts',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/api/profileService/requestModel.ts',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/api/profileService/responseModel.ts',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/App.tsx',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/components/CustomButton/index.tsx',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/components/CustomTable/index.tsx',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/components/InputText/index.tsx',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/components/Navbar/index.tsx',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/components/Navbar/style/index.tsx',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/components/Popup/index.tsx',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/components/TextStyle/index.tsx',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/constant/colors.ts',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/main.tsx',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/router/index.tsx',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/store/store.ts',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/views/dummyJson/index.tsx',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/views/dummyJson/listJsonSlice.ts',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/views/dummyJson/style/index.tsx',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/views/dummyJson/__components/addForm.tsx',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/views/globalError/globalErrorSlice.ts',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/views/globalError/index.tsx',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/views/history/historySlice.ts',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/views/history/index.tsx',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/views/home/homeSlice.ts',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/views/home/index.tsx',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/views/loading/index.tsx',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/views/loading/loadingSlice.ts',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/views/login/index.tsx',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/views/login/loginSlice.ts',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/views/login/style/style.tsx',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/views/login/__components/login.tsx',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/views/login/__components/register.tsx',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/views/profile/index.tsx',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/views/profile/profileSlice.ts',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/views/profile/style/index.tsx',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/src/vite-env.d.ts',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/tsconfig.app.json',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/tsconfig.json',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/tsconfig.node.json',
-  'A:/Personal/docker/reviewer/tmp/project/Gefami-Test-Client/vite.config.ts',
-];
+/**
+ * An array containing file objects with their names and paths.
+ * Each object follows the {@link FileObject} structure.
+ *
+ * @example
+ * // Example structure:
+ * [
+ *   {
+ *     name: 'debug.html',
+ *     message: 'This is a debug file.'
+ *     path: './tmp/requirements/debug.html'
+ *   },
+ *   {
+ *     name: 'app.js',
+ *     message: 'This is the main application file.'
+ *     path: './src/app.js'
+ *   }
+ * ]
+ *
+ * @type {Array<FileObject>}
+ */
+const filePaths = [];
 
+/**
+ * Module exports an array of file objects.
+ * @module filePaths
+ * @type {Array<FileObject>}
+ */
 module.exports = filePaths;

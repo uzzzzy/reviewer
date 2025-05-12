@@ -1,14 +1,23 @@
 const fs = require('fs');
+const path = require('path');
 
 const { chatting } = require('../utils/ai');
 const { writeFile, readFile, addContentToFile } = require('../utils/file');
 
-function chatPlugin({ id = null, markdown = false } = {}) {
-  const dir = 'tmp/chats/chat_' + id + '/';
+function chatPlugin(options = {}) {
+  let { id = null, markdown = false } = options;
+  let dir;
 
-  if (!fs.existsSync(dir) && id !== null) {
-    console.log('Error: Chat directory not found');
-    process.exit(1);
+  if (id !== null) {
+    dir = path.join('tmp', 'chats', `chat_${id}`);
+    if (!fs.existsSync(dir)) {
+      throw new Error(`Chat directory not found: ${dir}`);
+    }
+    dir += path.sep; // tambahkan trailing slash
+  } else {
+    id = Date.now();
+    dir = path.join('tmp', 'chats', `chat_${id}`, path.sep);
+    fs.mkdirSync(dir, { recursive: true });
   }
 
   id = id || new Date().getTime();
@@ -32,7 +41,7 @@ function chatPlugin({ id = null, markdown = false } = {}) {
 
   const sendMessage = async (message, saveToHistory = true) => {
     if (markdown) {
-      await writeToMarkdown(message);
+      await writeToMarkdown('# ' + message);
     }
     const response = await chatting({ history, message });
     if (saveToHistory) {
@@ -71,6 +80,7 @@ function chatPlugin({ id = null, markdown = false } = {}) {
       await writeHistory();
     }
     if (saveMarkdown) {
+      await writeToMarkdown('#' + message);
       await writeToMarkdown(response);
     }
     return;
