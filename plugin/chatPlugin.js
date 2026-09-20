@@ -29,6 +29,7 @@ function chatPlugin(options = {}) {
   const writeMarkdown = async (content) => {
     if (!markdown) return;
     try {
+      console.log(content + '\n');
       await addContentToFile(markdownFile, content);
     } catch (err) {
       console.error('Failed to write markdown:', err);

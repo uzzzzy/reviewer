@@ -1,6 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 
+function isThisFile(filePath) {
+  const stat = fs.statSync(filePath);
+  return stat.isFile();
+}
+
 function writeFile(filePath, content) {
   const dir = path.dirname(filePath);
 
@@ -31,4 +36,4 @@ function readFile(filePath, fallbackContent = '') {
   }
 }
 
-module.exports = { writeFile, addContentToFile, readFile };
+module.exports = { writeFile, addContentToFile, readFile, isThisFile };

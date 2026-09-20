@@ -10,7 +10,8 @@ const rl = readline.createInterface({
 });
 
 const chatPlugin = require('./plugin/chatPlugin');
-const { readFile } = require('./utils/file');
+const { readFile, isThisFile } = require('./utils/file');
+const strip = require('strip-comments');
 
 const chat = chatPlugin({
   markdown: true,
@@ -19,11 +20,11 @@ const chat = chatPlugin({
 async function main() {
   await chat.addHistory(
     `
-ini adalah requirement dari project:
-${readFile('requirements/main.md')}
-setelah ini aku akan memberikan data project untuk review
-'''
-    `,
+  ini adalah requirement dari project:
+  ${readFile('requirements/main.md')}
+
+  '''
+      `,
     'ya',
     true,
     true
@@ -31,7 +32,14 @@ setelah ini aku akan memberikan data project untuk review
 
   const tree = await require('tree-cli')({
     base: config.projectPath,
-    ignore: config.excludedPaths,
+    ignore: [
+      ...config.excludedPaths,
+      '.svg',
+      'images/',
+      'scss/',
+      'fonts/',
+      'vendor/',
+    ],
     l: 5,
   });
 
@@ -42,7 +50,6 @@ ${tree.report}
     `,
     'ya'
   );
-
   const requirementFiles = require('./requirements/paths');
 
   if (requirementFiles.length > 0) {
@@ -89,7 +96,10 @@ ${fileContent}
   });
 
   for (const path of paths) {
-    const content = readFile(path);
+    if (!isThisFile(path)) {
+      continue;
+    }
+    const content = strip(readFile(path));
     await chat.addHistory(
       `
 ini file ${path}
